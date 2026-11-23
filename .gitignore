@@ -1,0 +1,6 @@
+*.key
+*.pem
+*.backup
+*.rsc.private
+secrets/
+.env
