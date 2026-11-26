@@ -8,7 +8,7 @@ Prepare the design and the environment before building anything.
 - Hypervisor: VMware Workstation Pro
 - Images (kept outside the repository):
   - Ubuntu Server 26.04.1 LTS
-  - MikroTik CHR 7.25.2 (OVA)
+  - MikroTik CHR 7.24.7 (OVA)
 
 ## Design
 ![Network diagram](../diagrams/network-v1.png)
