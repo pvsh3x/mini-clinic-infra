@@ -33,7 +33,7 @@ MikroTik RouterOS (CHR), Ubuntu Server, Windows Server (evaluation), AdGuard Hom
 
 - [x] Stage 0: Project setup, network diagram, addressing plan
 - [x] Stage 1: Network (router, segments, DHCP, DNS, firewall)
-- [ ] Stage 2: Linux server (SSH keys, ufw, fail2ban, AdGuard Home)
+- [x] Stage 2: Linux server (SSH keys, ufw, fail2ban, AdGuard Home)
 - [ ] Stage 3: Active Directory (domain, OU, users, GPO, file share)
 - [ ] Stage 4: Backups with restore test
 - [ ] Stage 5: Monitoring and Telegram alerts

@@ -1,4 +1,4 @@
-# 2026-11-26 10:06:26 by RouterOS 7.24.7
+# 2026-11-27 12:28:50 by RouterOS 7.24.7
 #
 /interface ethernet
 set [ find default-name=ether1 ] comment="WAN (NAT)" disable-running-check=no
@@ -14,6 +14,9 @@ add name=LAN
 /ip pool
 add name=pool-ws ranges=10.10.20.100-10.10.20.200
 add name=pool-guest ranges=10.10.30.100-10.10.30.200
+/ip dhcp-server
+add address-pool=pool-ws interface=ether3 lease-time=1h name=dhcp-ws
+add address-pool=pool-guest interface=ether4 lease-time=1h name=dhcp-guest
 /interface list member
 add interface=ether2 list=LAN
 add interface=ether3 list=LAN
@@ -28,13 +31,10 @@ add address=10.10.30.1/24 comment="Guest gateway" interface=ether4 network=\
     10.10.30.0
 /ip dhcp-client
 add interface=ether1 name=client1
-/ip dhcp-server
-add address-pool=pool-ws interface=ether3 lease-time=1h name=dhcp-ws
-add address-pool=pool-guest interface=ether4 lease-time=1h name=dhcp-guest
 /ip dhcp-server network
-add address=10.10.20.0/24 comment=Workstations dns-server=10.10.20.1 gateway=\
-    10.10.20.1
-add address=10.10.30.0/24 comment=Guest dns-server=10.10.30.1 gateway=\
+add address=10.10.20.0/24 comment=Workstations dns-server=10.10.10.10 \
+    gateway=10.10.20.1
+add address=10.10.30.0/24 comment=Guest dns-server=10.10.10.10 gateway=\
     10.10.30.1
 /ip dns
 set allow-remote-requests=yes
@@ -59,6 +59,14 @@ add action=accept chain=forward comment="ws>srv ssh" dst-address=\
     10.10.10.0/24 dst-port=22 protocol=tcp src-address=10.10.20.0/24
 add action=accept chain=forward comment="fwd: LAN to internet" \
     in-interface-list=LAN out-interface-list=WAN
+add action=accept chain=forward comment="ws>dns udp" dst-address=10.10.10.10 \
+    dst-port=53 protocol=udp src-address=10.10.20.0/24
+add action=accept chain=forward comment="ws>dns tcp" dst-address=10.10.10.10 \
+    dst-port=53 protocol=tcp src-address=10.10.20.0/24
+add action=accept chain=forward comment="guest>dns udp" dst-address=\
+    10.10.10.10 dst-port=53 protocol=udp src-address=10.10.30.0/24
+add action=accept chain=forward comment="guest>dns tcp" dst-address=\
+    10.10.10.10 dst-port=53 protocol=tcp src-address=10.10.30.0/24
 add action=drop chain=forward comment="fwd: drop rest"
 /ip firewall nat
 add action=masquerade chain=srcnat comment="NAT to WAN" out-interface=ether1
